@@ -9,6 +9,7 @@ pico_sdk_init()
 
 add_subdirectory(lib/Config)
 add_subdirectory(lib/LCD)
+add_subdirectory(lib/GUI)
 
 include_directories(lib/Config)
 include_directories(lib/LCD)
@@ -23,4 +24,4 @@ pico_enable_stdio_uart(test 1)
 
 pico_add_extra_outputs(test)
 
-target_link_libraries(test pico_stdlib LCD Config hardware_spi hardware_i2c hardware_pwm)
+target_link_libraries(test pico_stdlib LCD GUI Config hardware_spi hardware_i2c hardware_pwm)
