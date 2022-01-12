@@ -2,12 +2,23 @@
 #include "lib/LCD/LCD_1in8.h"
 #include "lib/Config/Debug.h"
 #include "lib/GUI/GUI_Paint.h"
+#include "lib/GUI/ImageData.h"
+#include "lib/Fonts/fonts.h"
+
+// Definitions for stats.
+#define STR 0
+#define VIT 0
+#define INT 0
 
 // Function Declaration
 int main(void);
 int loop_5ms();
 int loop_1ms(UWORD *Image);
 int loop_100us();
+int initializestats(char class);
+int increasestat(int stat);
+int increasegold(int totalgold);
+int inventory();
 
 // Parameters Declaration for drawing dots.
 uint16_t x_point = 0;
@@ -16,6 +27,14 @@ uint16_t color_one;
 DOT_PIXEL pixel_type;
 DOT_STYLE dot_style;
 
+// Struct for inventory
+
+// Struct for Stats
+struct Stats {
+    int Strength;
+    int Vitality;
+    int Intelligence;
+}Warrior;
 
 // Drawing Reference code
 // Paint_DrawPoint(2, 1, BLACK, DOT_PIXEL_2X2, DOT_FILL_RIGHTUP);
@@ -52,6 +71,12 @@ int main(void)
     // Wait time to initialize Everything.
     DEV_Delay_ms(2000);
 
+    // Begin here for game.
+
+    char class_selection = 'w';
+
+    initializestats(class_selection);
+
     // Main Loop to refresh the screen.
     while(1) {
         printf("Inside Main loop\n");
@@ -72,23 +97,19 @@ int loop_1ms(UWORD *Image) {
 
     printf("Inside 1ms loop\n");
 
-
-    if(x_point > LCD_1IN8_WIDTH) {
-        x_point = 0;
-    }
-    
-    if(y_point > LCD_1IN8_HEIGHT) {
-        y_point = 0;
-    }
-
+    // Parameters for drawpoint.
     color_one = BLACK;
     pixel_type = DOT_PIXEL_2X2;
     dot_style = DOT_FILL_RIGHTUP;
 
-    Paint_DrawPoint(x_point, y_point, color_one, pixel_type, dot_style);
-    x_point = x_point + 1;
-    y_point = y_point + 1;
+    char stats_projection[10] = "";
 
+    stats_projection[0] = Warrior.Strength + '0';
+
+    Paint_DrawString_EN(1, 83, "Stats:", &Font12, WHITE, BLACK); 
+    Paint_DrawString_EN(1, 125, stats_projection, &Font12, WHITE, BLACK);
+
+    // Updated the display with Image.
     LCD_1IN8_Display(Image);
     DEV_Delay_ms(1);
 }
@@ -97,4 +118,25 @@ int loop_100us() {
     
     printf("Inside 100us loop\n");
     DEV_Delay_us(100);
+}
+
+int initializestats(char class) {
+
+    if (class == 'w') {
+        Warrior.Strength = 2;
+        Warrior.Intelligence = 0;
+        Warrior.Vitality = 4;
+    }
+}
+
+int increasestat(int stat) {
+
+}
+
+int inventory() {
+    int gold = 0;
+}
+
+int increasegold(int totalgold) {
+    
 }
