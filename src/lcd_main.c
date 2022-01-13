@@ -215,12 +215,10 @@ int increasegold(int totalgold) {
 // Display information for stats Menu.
 int statsMenuDisplay() {
 
-    char stats_projection[10] = "";
-
-    stats_projection[0] = Strength + '0';
 
     Paint_DrawString_EN(1, 83, "Stats:", &Font12, WHITE, BLACK); 
-    Paint_DrawString_EN(1, 125, stats_projection, &Font12, WHITE, BLACK);
+
+    Paint_DrawNum(1, 105, Strength, &Font12, 1, WHITE, BLACK);
 }
 
 char getPlayerInput() {
