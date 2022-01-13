@@ -15,7 +15,7 @@ build()
     fi
 
     cd build/
-    export PICO_SDK_PATH=../../pico-sdk
+    export PICO_SDK_PATH=../../../pico-sdk
     cmake ..
     make -j4
 
