@@ -9,6 +9,8 @@
 #include "lib/GUI/ImageData.h"
 #include "lib/Fonts/fonts.h"
 
+//TODO(MSR): FIX loops not being actually RTOS.
+
 // Multicore parameter needed.
 #define FLAG_VALUE 123
 
@@ -22,8 +24,9 @@ int main(void);
 int loop_5ms();
 int loop_16ms(UWORD *Image);
 int loop_100us();
-int initializestats(char class);
-int increasestat(int stat);
+int loop_1s();
+int initializeWarriorStats();
+int increaseStrengthStat();
 int increasegold(int totalgold);
 int inventory();
 int statsMenuDisplay();
@@ -41,11 +44,21 @@ DOT_STYLE dot_style;
 // Struct for inventory
 
 // Struct for Stats
-struct Stats {
+struct WarriorStats {
     int Strength;
     int Vitality;
     int Intelligence;
-}Warrior;
+    int Level;
+};
+
+// Type definitions.
+typedef int global_stat;
+
+// Global Variables.
+global_stat Strength;
+global_stat Vitality;
+global_stat Intelligence;
+global_stat Level;
 
 // Drawing Reference code
 // Paint_DrawPoint(2, 1, BLACK, DOT_PIXEL_2X2, DOT_FILL_RIGHTUP);
@@ -125,10 +138,8 @@ int main(void)
     DEV_Delay_ms(200);
 
     // Begin here for game.
+    initializeWarriorStats();
 
-    char class_selection = 'w';
-
-    initializestats(class_selection);
 
     // Menu Controls prompt.
     printf("Controls for Menu (s = stats, i = inventory, c = character): \n");
@@ -138,48 +149,59 @@ int main(void)
     while(1) {
         loop_100us();
         loop_5ms();
+        loop_1s();
     }
 
 }
 
+// 1 seconds loop for game engine.
+int loop_1s() {
 
+    increaseStrengthStat();
+    DEV_Delay_ms(1000);
+}
+
+// Status Loop for periphals.
 int loop_5ms() {
 
     getPlayerInput(); 
     DEV_Delay_ms(5);
 }
 
-// 16ms loop for 60hz.
+// Display loop running at 16ms(60hz).
 int loop_16ms(UWORD *Image) {
-
-
-    // Parameters for drawpoint.
-    color_one = BLACK;
-    pixel_type = DOT_PIXEL_2X2;
-    dot_style = DOT_FILL_RIGHTUP;
-
-
+    
     // Updated the display with Image.
     LCD_1IN8_Display(Image);
     DEV_Delay_ms(16);
 }
 
+
+// Fast Auxillary Loop.
 int loop_100us() {
-    
+    Paint_Clear(WHITE);
     DEV_Delay_us(100);
 }
 
-int initializestats(char class) {
+int initializeWarriorStats() {
 
-    if (class == 'w') {
-        Warrior.Strength = 2;
-        Warrior.Intelligence = 0;
-        Warrior.Vitality = 4;
-    }
+    struct WarriorStats level_1_stats;
+    level_1_stats.Strength = 2;
+    level_1_stats.Vitality = 5;
+    level_1_stats.Intelligence = 0;
+    level_1_stats.Level = 1;
+    setWarriorStats(&level_1_stats);
 }
 
-int increasestat(int stat) {
+int setWarriorStats(struct WarriorStats *stats) {
+    Strength = stats->Strength;
+    Vitality = stats->Vitality;
+    Intelligence = stats->Intelligence;
 
+}
+
+int increaseStrengthStat() {
+    Strength = Strength + 1;
 }
 
 int inventory() {
@@ -190,11 +212,12 @@ int increasegold(int totalgold) {
     
 }
 
+// Display information for stats Menu.
 int statsMenuDisplay() {
 
     char stats_projection[10] = "";
 
-    stats_projection[0] = Warrior.Strength + '0';
+    stats_projection[0] = Strength + '0';
 
     Paint_DrawString_EN(1, 83, "Stats:", &Font12, WHITE, BLACK); 
     Paint_DrawString_EN(1, 125, stats_projection, &Font12, WHITE, BLACK);
@@ -202,7 +225,7 @@ int statsMenuDisplay() {
 
 char getPlayerInput() {
 
-    char playerinput = getchar();
+    char playerinput = getchar_timeout_us(0);
     printf("Got User Input %c\n", playerinput);
     setPlayerInput(playerinput);
 
