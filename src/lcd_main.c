@@ -19,6 +19,7 @@
 #define VIT 0
 #define INT 0
 
+
 // Function Declaration
 int main(void);
 int loop_5ms();
@@ -34,6 +35,7 @@ void characterMenuDisplay();
 char getPlayerInput();
 char setDisplayState();
 void core1_entry();
+void characterPixelMap();
 
 // Parameters Declaration for drawing dots.
 uint16_t x_point = 0;
@@ -101,7 +103,7 @@ void core1_interrupt_handler() {
     Paint_NewImage((UBYTE *)BlackImage, LCD_1IN8.WIDTH,LCD_1IN8.HEIGHT, 90, WHITE);
     Paint_SetScale(65);
     Paint_Clear(WHITE);
-    Paint_SetRotate(ROTATE_90);
+    Paint_SetRotate(ROTATE_0);
 
     while(1) {
         
@@ -192,7 +194,6 @@ int main(void)
 // 1 seconds loop for game engine.
 int loop_1s() {
 
-    increaseStrengthStat();
     DEV_Delay_ms(1000);
 }
 
@@ -244,6 +245,7 @@ int increaseStrengthStat() {
 void statsMenuDisplay() {
 
 
+
     Paint_DrawString_EN(1, 1, "Stats", &Font20, WHITE, BLACK); 
     Paint_DrawString_EN(1, 20, "Level", &Font12, WHITE, BLACK); 
     Paint_DrawString_EN(1, 30, "STR", &Font12, WHITE, BLACK); 
@@ -260,7 +262,10 @@ void statsMenuDisplay() {
 
 void characterMenuDisplay() {
 
-    Paint_DrawRectangle(50, 50, 100, 100, BLACK, DOT_PIXEL_1X1, DOT_FILL_RIGHTUP);
+    Paint_DrawRectangle(4, 20, 130, 110, BLACK, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
+}
+
+void characterPixelMap() {
 }
 
 
@@ -283,7 +288,6 @@ char getPlayerInput() {
 char setDisplayState() {
 
     char input = getPlayerInput();
-    printf("%c\n", input);
     
     if(input == 's') {
         // Stats Menu input.
@@ -298,7 +302,7 @@ char setDisplayState() {
         desired_display = character_menu;
     }
     else {
-        printf("Invalid input!%c\n", input);
+        //printf("Invalid input!%c\n", input);
     }
 }
 
