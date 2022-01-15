@@ -10,6 +10,7 @@
 #include "lib/Fonts/fonts.h"
 
 //TODO(MSR): FIX loops not being actually RTOS.
+//TODO(MSR): Finish inventory system. Need to figure out how to apply values to items.
 
 // Multicore parameter needed.
 #define FLAG_VALUE 123
@@ -53,6 +54,23 @@ struct WarriorStats {
     int Intelligence;
     int Level;
 };
+
+enum ItemIdentifiers {
+    gold = 0,
+    iron_long_sword = 1
+};
+
+struct Gold {
+    int value;
+    int amount;
+};
+
+struct Iron_Long_Sword {
+    int value;
+    int damage;
+};
+
+int InventorySlots[5] = {};
 
 // Type definitions.
 typedef int global_stat;
@@ -244,8 +262,6 @@ int increaseStrengthStat() {
 // Display information for stats Menu.
 void statsMenuDisplay() {
 
-
-
     Paint_DrawString_EN(1, 1, "Stats", &Font20, WHITE, BLACK); 
     Paint_DrawString_EN(1, 20, "Level", &Font12, WHITE, BLACK); 
     Paint_DrawString_EN(1, 30, "STR", &Font12, WHITE, BLACK); 
@@ -257,7 +273,6 @@ void statsMenuDisplay() {
     Paint_DrawNum(25, 30, Strength, &Font12, 0, BLACK, WHITE);
     Paint_DrawNum(25, 40, Vitality, &Font12, 0, BLACK, WHITE);
     Paint_DrawNum(25, 50, Intelligence, &Font12, 0, BLACK, WHITE);
-
 }
 
 void characterMenuDisplay() {
@@ -282,7 +297,6 @@ char getPlayerInput() {
         case 'c':
             return playerinput;
     }
-    
 }
 
 char setDisplayState() {
@@ -306,9 +320,31 @@ char setDisplayState() {
     }
 }
 
+void inventoryMenuDisplay() {
 
-int inventory() {
-    int gold = 0;
+    for(int i = 0; i<sizeof(Inventory); i++) {
+        if(Inventory[i] == 0) {
+            Paint_DrawString_EN(1, 20, "gold", &Font12, WHITE, BLACK); 
+            Paint_DrawNum(25, 20, gold, &Font12, 0, BLACK, WHITE);
+        }
+    }
+
+    Paint_DrawString_EN(1, 1, "Inventory", &Font20, WHITE, BLACK); 
+
+
+
+}
+
+int setInventory() {
+
+    for(int i = 0; i<sizeof(Inventory); i++) {
+        Inventory[i] = 
+    }
+
+}
+
+int getInventory() {
+
 }
 
 int increasegold(int totalgold) {
