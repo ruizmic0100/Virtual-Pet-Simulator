@@ -9,17 +9,13 @@
 #include "lib/GUI/ImageData.h"
 #include "lib/Fonts/fonts.h"
 
+#include "include/displaystate.h"
+
 //TODO(MSR): FIX loops not being actually RTOS.
-//TODO(MSR): Finish inventory system. Need to figure out how to apply values to items.
+//TODO(MST): Merge conflict will exist with home rig from now on.
 
 // Multicore parameter needed.
 #define FLAG_VALUE 123
-
-// Definitions for stats.
-#define STR 0
-#define VIT 0
-#define INT 0
-
 
 // Function Declaration
 int main(void);
@@ -27,87 +23,21 @@ int loop_5ms();
 int loop_20ms(UWORD *Image);
 int loop_200us();
 int loop_1s();
-int initializeWarriorStats();
-int increaseStrengthStat();
-int increasegold(int totalgold);
-int inventory();
-void statsMenuDisplay();
-void characterMenuDisplay();
-char getPlayerInput();
-char setDisplayState();
 void core1_entry();
-void characterPixelMap();
+int loop_complete();
 
-// Parameters Declaration for drawing dots.
-uint16_t x_point = 0;
-uint16_t y_point = 0;
-uint16_t color_one;
-DOT_PIXEL pixel_type;
-DOT_STYLE dot_style;
-
-// Struct for inventory
-
-// Struct for Stats
-struct WarriorStats {
-    int Strength;
-    int Vitality;
-    int Intelligence;
-    int Level;
-};
-
-enum ItemIdentifiers {
-    gold = 0,
-    iron_long_sword = 1
-};
-
-struct Gold {
-    int value;
-    int amount;
-};
-
-struct Iron_Long_Sword {
-    int value;
-    int damage;
-};
-
-int InventorySlots[5] = {};
-
-// Type definitions.
-typedef int global_stat;
-typedef uint16_t display_state;
-typedef int menu_state;
-
-// Global Variables.
-global_stat Strength;
-global_stat Vitality;
-global_stat Intelligence;
-global_stat Level;
-
-// Display states
-display_state desired_display = 0;
-display_state current_display;
-display_state previous_display;
-display_state next_display;
-display_state update_display = 55;
-
-// Menu States
-menu_state character_menu = 0;
-menu_state inventory_menu = 1;
-menu_state stats_menu = 2;
-
-
-// Drawing Reference code
-// Paint_DrawPoint(2, 1, BLACK, DOT_PIXEL_2X2, DOT_FILL_RIGHTUP);
-// Paint_DrawLine(10, 5, 40, 36, BLUE, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
 
 bool reserved_addr(uint8_t addr) {
     return (addr & 0x78) == 0 || (addr & 0x78) == 0x78;
 }
 
+int loop_complete() {
+	return 1;	
+}
+
 // Core 1 interrupt handler.
 void core1_interrupt_handler() {
 
-    printf("before while loop");
     // LCD Init
     LCD_1IN8_Init(HORIZONTAL);
     LCD_1IN8_Clear(WHITE);
@@ -141,8 +71,6 @@ void core1_interrupt_handler() {
         } else {
             printf("no valid selection");
         }
-
-
     }
 
     // Receiver function whenever buffer is valid.
@@ -195,7 +123,6 @@ int main(void)
     // Begin here for game.
     initializeWarriorStats();
 
-
     // Menu Controls prompt.
     printf("Controls for Menu (s = stats, i = inventory, c = character): \n");
 
@@ -204,21 +131,24 @@ int main(void)
     while(1) {
         loop_200us();
         loop_5ms();
-        //loop_1s();
+		loop_20ms();
+        loop_1s();
     }
 
 }
 
-// 1 seconds loop for game engine.
-int loop_1s() {
 
-    DEV_Delay_ms(1000);
+// Fast Auxillary Loop.
+int loop_200us() {
+	//loop_complete();
+    DEV_Delay_us(200);
 }
 
 // Status Loop for periphals.
 int loop_5ms() {
 
     setDisplayState();
+	//loop_complete();
     DEV_Delay_ms(5);
 }
 
@@ -227,126 +157,12 @@ int loop_20ms(UWORD *Image) {
     
     // Updated the display with Image.
     LCD_1IN8_Display(Image);
+	//loop_complete();
     DEV_Delay_ms(20);
 }
 
-
-// Fast Auxillary Loop.
-int loop_200us() {
-    DEV_Delay_us(200);
-}
-
-// Stats Can't be zero.
-int initializeWarriorStats() {
-
-    struct WarriorStats level_1_stats;
-    level_1_stats.Strength = 3;
-    level_1_stats.Vitality = 5;
-    level_1_stats.Intelligence = 1;
-    level_1_stats.Level = 1;
-    setWarriorStats(&level_1_stats);
-}
-
-int setWarriorStats(struct WarriorStats *stats) {
-
-    Strength = stats->Strength;
-    Vitality = stats->Vitality;
-    Intelligence = stats->Intelligence;
-}
-
-int increaseStrengthStat() {
-    Strength = Strength + 1;
-}
-
-
-// Display information for stats Menu.
-void statsMenuDisplay() {
-
-    Paint_DrawString_EN(1, 1, "Stats", &Font20, WHITE, BLACK); 
-    Paint_DrawString_EN(1, 20, "Level", &Font12, WHITE, BLACK); 
-    Paint_DrawString_EN(1, 30, "STR", &Font12, WHITE, BLACK); 
-    Paint_DrawString_EN(1, 40, "VIT", &Font12, WHITE, BLACK);
-    Paint_DrawString_EN(1, 50, "INT", &Font12, WHITE, BLACK);
-
-
-    Paint_DrawNum(25, 20, Level, &Font12, 0, BLACK, WHITE);
-    Paint_DrawNum(25, 30, Strength, &Font12, 0, BLACK, WHITE);
-    Paint_DrawNum(25, 40, Vitality, &Font12, 0, BLACK, WHITE);
-    Paint_DrawNum(25, 50, Intelligence, &Font12, 0, BLACK, WHITE);
-}
-
-void characterMenuDisplay() {
-
-    Paint_DrawRectangle(4, 20, 130, 110, BLACK, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-}
-
-void characterPixelMap() {
-}
-
-
-char getPlayerInput() {
-
-    char playerinput = getchar_timeout_us(0);
-
-    // Filter. 
-    switch(playerinput) {
-        case 's':
-            return playerinput;
-        case 'i':
-            return playerinput;
-        case 'c':
-            return playerinput;
-    }
-}
-
-char setDisplayState() {
-
-    char input = getPlayerInput();
-    
-    if(input == 's') {
-        // Stats Menu input.
-        desired_display = stats_menu;
-    }
-    else if(input == 'i') {
-        // Inventory Menu input.
-        desired_display = inventory_menu;
-    }
-    else if(input == 'c') {
-        // Character Menu input.
-        desired_display = character_menu;
-    }
-    else {
-        //printf("Invalid input!%c\n", input);
-    }
-}
-
-void inventoryMenuDisplay() {
-
-    for(int i = 0; i<sizeof(Inventory); i++) {
-        if(Inventory[i] == 0) {
-            Paint_DrawString_EN(1, 20, "gold", &Font12, WHITE, BLACK); 
-            Paint_DrawNum(25, 20, gold, &Font12, 0, BLACK, WHITE);
-        }
-    }
-
-    Paint_DrawString_EN(1, 1, "Inventory", &Font20, WHITE, BLACK); 
-
-
-
-}
-
-int setInventory() {
-
-    for(int i = 0; i<sizeof(Inventory); i++) {
-        Inventory[i] = 
-    }
-
-}
-
-int getInventory() {
-
-}
-
-int increasegold(int totalgold) {
-    
+// 1 seconds loop for game engine.
+int loop_1s() {
+	//loop_complete();
+    DEV_Delay_ms(1000);
 }

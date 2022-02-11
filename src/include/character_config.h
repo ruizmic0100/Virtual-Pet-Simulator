@@ -1,0 +1,5 @@
+#ifndef CHARACTER_CONFIG_H
+#define CHARACTER_CONFIG_H
+
+
+#endif
