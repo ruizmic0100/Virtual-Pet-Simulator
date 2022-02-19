@@ -1,20 +1,14 @@
-# pico_project_c
-Raspberry Pi Pico Project written in C++/C
+# Virtual Pet Simulator
+Raspberry Pi Pico Project written in C. Practice creating state stacks, RTOS elements, and custom libraries for creating a game on a raspberry pi pico equipped with a LCD module.
 
 # Build Process
     cd src/
-    mkdir build
-    cd build
-    export PICO_SDK_PATH=../../pico-sdk
-    cmake ..
-    make -j4
+	../build_tools/build.sh
 
-# Game
+# Game Loop
 
 Idle Looter with rpg elements and roguelike replayability. 
-Idle Looter: Will have the character randomly battle enemies across different levels defeating them and getting loot and experience.
+(Idle Looter): Will have the character randomly battle enemies across different levels defeating them and getting loot and experience.
 RPG Elements: Stats, Levels, and Character Selection.
-Roguelike Replayability: Character progression and loops***.
+Roguelike Replayability: Character progression and Rebirth cycles.
 
-# FootNotes
-loops*** = The gameplay will loop over and over with increasing difficulty.
