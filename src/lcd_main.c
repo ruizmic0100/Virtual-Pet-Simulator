@@ -9,7 +9,10 @@
 #include "lib/GUI/ImageData.h"
 #include "lib/Fonts/fonts.h"
 
+#include "include/menus.h"
+#include "include/character_config.h"
 #include "include/displaystate.h"
+
 
 //TODO(MSR): FIX loops not being actually RTOS.
 //TODO(MST): Merge conflict will exist with home rig from now on.
@@ -20,7 +23,7 @@
 // Function Declaration
 int main(void);
 int loop_5ms();
-int loop_20ms(UWORD *Image);
+int loop_20ms();
 int loop_200us();
 int loop_1s();
 void core1_entry();
@@ -153,11 +156,8 @@ int loop_5ms() {
 }
 
 // Display loop running at 16ms(60hz).
-int loop_20ms(UWORD *Image) {
+int loop_20ms() {
     
-    // Updated the display with Image.
-    LCD_1IN8_Display(Image);
-	//loop_complete();
     DEV_Delay_ms(20);
 }
 

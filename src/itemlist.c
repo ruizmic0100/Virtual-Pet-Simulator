@@ -18,4 +18,4 @@ struct LongSword {
 	int value;
 	int level;
 	int damage;
-}
+};

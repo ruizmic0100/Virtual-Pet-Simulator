@@ -1,0 +1,1 @@
+void draw_player_character_Standby();

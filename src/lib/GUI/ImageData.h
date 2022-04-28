@@ -35,7 +35,8 @@ extern const unsigned char Msg816[];
 extern const unsigned char Bat816[];
 extern const unsigned char Bluetooth88[];
 extern const unsigned char GPRS88[];
-extern const unsigned char Alarm88[]; 
+extern const unsigned char Alarm88[];
+extern const unsigned char player_character_image_Standby[];
 
 extern const unsigned char gImage_0inch96_1[];
 extern const unsigned char gImage_1inch14_1[];

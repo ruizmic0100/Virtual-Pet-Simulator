@@ -29,6 +29,7 @@ include_directories(lib/pico_stdlib/include/)
 include_directories(lib/hardware_spi/include/)
 include_directories(lib/hardware_pwm/include/)
 include_directories(lib/hardware_i2c/include/)
+include_directories(include/)
 
 
 link_directories(lib/Config)
@@ -52,6 +53,7 @@ link_directories(lib/pico_stdlib/include/)
 link_directories(lib/hardware_spi/include/)
 link_directories(lib/hardware_pwm/include/)
 link_directories(lib/hardware_i2c/include/)
+link_directories(include/)
 
 add_subdirectory(lib/Config)
 add_subdirectory(lib/LCD)
@@ -73,6 +75,14 @@ add_subdirectory(lib/hardware_i2c)
 
 add_executable(output
     lcd_main.c
+    character_config.c
+    displaystate.c
+    inputs.c
+    inventory.c
+    itemlist.c
+    menus.c
+    player_character.c
+
 )
 
 pico_enable_stdio_usb(output 1)

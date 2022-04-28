@@ -58,6 +58,11 @@ const unsigned char Alarm88[8] = //alram
 	0xC3,0xBD,0x42,0x52,0x4E,0x42,0x3C,0xC3
 };
 
+const unsigned char player_character_image_Standby[8] = // Player Character In Standby Position
+{
+	0xC3,0xBD,0x42,0x52,0x4E,0x42,0x3C,0xC3
+};
+
 const unsigned char gImage_0inch96_1[25600] = { //0X00,0X10,0XA0,0X00,0X50,0X00,0X01,0X1B,
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,
